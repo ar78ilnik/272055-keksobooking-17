@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Илья Аракчиев](https://up.htmlacademy.ru/javascript/17/user/272055).
-* Наставник: `Неизвестно`.
+* Наставник: [Александр Быков] (https://htmlacademy.ru/profile/id7107).
 
 ---
 
