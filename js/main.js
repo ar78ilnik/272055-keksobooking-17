@@ -14,7 +14,7 @@ var getRandomNumber = function (maxNumber) {
   return Math.floor(Math.random() * maxNumber);
 };
 
-var createPins = function (pinsCount) {
+var createPinObjects = function (pinsCount) {
   var pins = [];
   for (var i = 0; i < pinsCount; i++) {
     var pin = {
@@ -26,7 +26,8 @@ var createPins = function (pinsCount) {
   }
   return pins;
 };
-var pins = createPins(8);
+
+var pins = createPinObjects(8);
 
 // 2. Убираем класс .map--faded
 var map = document.querySelector('.map');
@@ -34,12 +35,22 @@ map.classList.remove('map--faded');
 
 // 3. Создание DOM-элементов
 
-var listPins = document.querySelector('.map__pins');
+var pinsTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+var mapPins = document.querySelector('.map__pins');
 
-for (var i = 0; i < 8; i++) {
-  var pinElement = document.createElement('div');
-  pinElement.style = ''
-listPins.appendChild(pinElement);
+var renderPin = function () {
+  var pinElement = pinsTemplate.cloneNode(true);
+  pinElement.querySelector('.map__pin').style = 'left: {{location.x}}px; top: {{location.y}}px;';
+  pinElement.querySelector('.map__pin').src = '{{author.avatar}}';
+  pinElement.querySelector('.map__pin').alt = '{{заголовок объявления}}';
+  return pinElement;
+};
+
+// 4. Отрисовка сгенерированных элементов в блок .map__pins
+var fragment = document.createDocumentFragment();
+
+for (var i = 0; i < pins.length; i++) {
+  fragment.appendChild(renderPin(pins[i]));
 }
 
-
+mapPins.appendChild(fragment);
