@@ -18,9 +18,9 @@ var createPinObjects = function (pinsCount) {
   var pins = [];
   for (var i = 0; i < pinsCount; i++) {
     var pin = {
-      author: {avatar: 'img/avatars/user{{0x}}.png'},
+      author: {avatar: 'img/avatars/user0' + getRandomNumber(8) + '.png'},
       offer: {type: getRandomValue(TYPES)},
-      location: {x: getRandomNumber(WIDTH_LOCATION), y: getRandomNumber(HEIGHT_LOCATION)}
+      location: {x: (getRandomNumber(WIDTH_LOCATION) + 25), y: getRandomNumber(HEIGHT_LOCATION)}
     };
     pins.push(pin);
   }
@@ -35,13 +35,15 @@ map.classList.remove('map--faded');
 
 // 3. Создание DOM-элементов
 
-var pinsTemplate = document.querySelector('#pin');
+var pinsTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+var pinImg = document.querySelector('#pin').children[0];
+console.log(pinImg, '111');
 var mapPins = document.querySelector('.map__pins');
 
 var renderPin = function () {
   var pinElement = pinsTemplate.cloneNode(true);
-  pinElement.style = 'left: ' +  + 'px; top: ' +  + 'px;';
-  pinElement.src = '{{author.avatar}}';
+  pinElement.style = 'left: ' + pins[i].location.x + 'px; top: ' + pins[i].location.y + 'px;';
+  pinElement.src = pins[i].author.avatar;
   pinElement.alt = '{{заголовок объявления}}';
   return pinElement;
 };
@@ -50,7 +52,8 @@ var renderPin = function () {
 var fragment = document.createDocumentFragment();
 
 for (var i = 0; i < pins.length; i++) {
-  fragment.appendChild(renderPin(pins[i]));
+  fragment.appendChild(renderPin(8));
+  console.log(fragment);
 }
 
 mapPins.appendChild(fragment);
