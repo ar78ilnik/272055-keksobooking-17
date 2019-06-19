@@ -35,14 +35,14 @@ map.classList.remove('map--faded');
 
 // 3. Создание DOM-элементов
 
-var pinsTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+var pinsTemplate = document.querySelector('#pin');
 var mapPins = document.querySelector('.map__pins');
 
 var renderPin = function () {
   var pinElement = pinsTemplate.cloneNode(true);
-  pinElement.querySelector('.map__pin').style = 'left: {{location.x}}px; top: {{location.y}}px;';
-  pinElement.querySelector('.map__pin').src = '{{author.avatar}}';
-  pinElement.querySelector('.map__pin').alt = '{{заголовок объявления}}';
+  pinElement.style = 'left: ' +  + 'px; top: ' +  + 'px;';
+  pinElement.src = '{{author.avatar}}';
+  pinElement.alt = '{{заголовок объявления}}';
   return pinElement;
 };
 
