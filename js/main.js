@@ -4,28 +4,6 @@ var TYPES = ['palace', 'flat', 'house', 'bungalo'];
 var WIDTH_LOCATION = 1200;
 var HEIGHT_LOCATION = 750;
 
-var form = document.querySelector('.ad-form');
-var fields = form.getElementsByTagName('fieldset');
-for (var i = 0; i < fields.length; i++) {
-  fields[i].setAttribute('disabled', 'disabled');
-}
-
-var mapFilters = document.querySelector('.map__filters');
-mapFilters.setAttribute('disabled', 'disabled');
-
-var mapPins = document.querySelector('.map__pins');
-mapPins.setAttribute('disabled', 'disabled');
-
-var mapPin = document.querySelector('.map__pin--main');
-mapPin.setAttribute('disabled', 'disabled');
-
-mapPin.addEventListener('click', function () {
-  for (i = 0; i < fields.length; i++) {
-    fields[i].removeAttribute('disabled');
-  }
-  mapPins.removeAttribute('disabled');
-})
-
 var getRandomValue = function (values) {
   var index = Math.floor(Math.random() * values.length);
   return values[index];
@@ -36,10 +14,11 @@ var getRandomNumber = function (maxNumber) {
 };
 
 var pinsTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+var mapPins = document.querySelector('.map__pins');
 
 var createPinObjects = function (pinsCount) {
   var Arraypins = [];
-  for (i = 0; i < pinsCount; i++) {
+  for (var i = 0; i < pinsCount; i++) {
     var pin = {
       author: {avatar: 'img/avatars/user0' + (i + 1) + '.png'},
       offer: {type: getRandomValue(TYPES)},
@@ -69,6 +48,28 @@ for (var i = 0; i < pins.length; i++) {
 
 mapPins.appendChild(fragment);
 
-var mapPins = document.querySelector('.map__pins');
-mapPins.setAttribute('disabled', 'disabled');
+var mapPin = document.querySelectorAll('.map__pin');
+for (i = 1; i < mapPin.length; i++) {
+  mapPin[i].style.display = 'none';
+}
+
+var form = document.querySelector('.ad-form');
+var fieldSets = form.getElementsByTagName('fieldset');
+for (i = 0; i < fieldSets.length; i++) {
+  fieldSets[i].setAttribute('disabled', 'disabled');
+}
+
+var map = document.querySelector('.map');
+var mapFilters = map.querySelector('.map__filters');
+mapFilters.setAttribute('disabled', 'disabled');
+
+var pinMain = document.querySelector('.map__pin--main');
+pinMain.addEventListener('click', function () {
+  for (i = 1; i < mapPin.length; i++) {
+    mapPin[i].style.display = 'block';
+  }
+  for (i = 0; i < fieldSets.length; i++) {
+    fieldSets[i].removeAttribute('disabled');
+  }
+});
 
