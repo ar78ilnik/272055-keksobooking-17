@@ -59,15 +59,14 @@ for (i = 0; i < fieldSets.length; i++) {
   fieldSets[i].setAttribute('disabled', 'disabled');
 }
 
-var map = document.querySelector('.map');
-var mapFilters = map.querySelector('.map__filters');
-mapFilters.setAttribute('disabled', 'disabled');
-
 var pinMain = document.querySelector('.map__pin--main');
 pinMain.addEventListener('click', function () {
   for (i = 1; i < mapPin.length; i++) {
     mapPin[i].style.display = 'block';
   }
+  var map = document.querySelector('.map');
+  var mapFilters = map.querySelector('.map__filters');
+  mapFilters.setAttribute('disabled', 'disabled');
   for (i = 0; i < fieldSets.length; i++) {
     fieldSets[i].removeAttribute('disabled');
   }
