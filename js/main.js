@@ -44,7 +44,7 @@ var pinAppend = function (pins) {
     fragment.appendChild(renderPin(pin));
   }
   mapPins.appendChild(fragment);
-}
+};
 
 var form = document.querySelector('.ad-form');
 var fieldsets = form.getElementsByTagName('fieldset');
@@ -52,7 +52,7 @@ var assignFieldsetAtrribute = function (param) {
   for (var i = 0; i < param.length; i++) {
     param[i].removeAttribute('disabled', 'disabled');
   }
-}
+};
 
 var pinMain = document.querySelector('.map__pin--main');
 pinMain.addEventListener('click', function () {
