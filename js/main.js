@@ -29,8 +29,6 @@ var createPinObjects = function (pinsCount) {
   return Arraypins;
 };
 
-var pins = createPinObjects(8);
-
 var renderPin = function (pinValues) {
   var pinElement = pinsTemplate.cloneNode(true);
   pinElement.style = 'left: ' + pinValues.location.x + 'px; top: ' + pinValues.location.y + 'px;';
@@ -39,36 +37,27 @@ var renderPin = function (pinValues) {
   return pinElement;
 };
 
-var fragment = document.createDocumentFragment();
-
-for (var i = 0; i < pins.length; i++) {
-  var pin = pins[i];
-  fragment.appendChild(renderPin(pin));
-}
-
-mapPins.appendChild(fragment);
-
-var mapPin = document.querySelectorAll('.map__pin');
-for (i = 1; i < mapPin.length; i++) {
-  mapPin[i].style.display = 'none';
+var pinAppend = function (pins) {
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < pins.length; i++) {
+    var pin = pins[i];
+    fragment.appendChild(renderPin(pin));
+  }
+  mapPins.appendChild(fragment);
 }
 
 var form = document.querySelector('.ad-form');
-var fieldSets = form.getElementsByTagName('fieldset');
-for (i = 0; i < fieldSets.length; i++) {
-  fieldSets[i].setAttribute('disabled', 'disabled');
+var fieldsets = form.getElementsByTagName('fieldset');
+var assignFieldsetAtrribute = function (param) {
+  for (var i = 0; i < param.length; i++) {
+    param[i].removeAttribute('disabled', 'disabled');
+  }
 }
 
 var pinMain = document.querySelector('.map__pin--main');
 pinMain.addEventListener('click', function () {
-  for (i = 1; i < mapPin.length; i++) {
-    mapPin[i].style.display = 'block';
-  }
-  var map = document.querySelector('.map');
-  var mapFilters = map.querySelector('.map__filters');
-  mapFilters.setAttribute('disabled', 'disabled');
-  for (i = 0; i < fieldSets.length; i++) {
-    fieldSets[i].removeAttribute('disabled');
-  }
+  var pins = createPinObjects(8);
+  pinAppend(pins);
+  assignFieldsetAtrribute(fieldsets);
 });
 
