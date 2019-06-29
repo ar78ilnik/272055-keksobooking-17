@@ -3,6 +3,8 @@
 var TYPES = ['palace', 'flat', 'house', 'bungalo'];
 var WIDTH_LOCATION = 1200;
 var HEIGHT_LOCATION = 750;
+var timeInInput = document.querySelector('#timein');
+var timeOutInput = document.querySelector('#timeout');
 
 var getRandomValue = function (values) {
   var index = Math.floor(Math.random() * values.length);
@@ -50,3 +52,12 @@ for (var i = 0; i < pins.length; i++) {
 }
 
 mapPins.appendChild(fragment);
+
+timeInInput.addEventListener('change', function (evt) {
+  timeOutInput.value = evt.target.value;
+});
+
+timeOutInput.addEventListener('change', function (evt) {
+  timeInInput.value = evt.target.value;
+});
+
