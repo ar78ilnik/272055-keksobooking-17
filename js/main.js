@@ -48,16 +48,28 @@ var pinAppend = function (pins) {
 
 var form = document.querySelector('.ad-form');
 var fieldsets = form.getElementsByTagName('fieldset');
-var assignFieldsetAtrribute = function (param) {
+var assignFieldsetAttribute = function (param) {
   for (var i = 0; i < param.length; i++) {
-    param[i].removeAttribute('disabled', 'disabled');
+    param[i].removeAttribute('disabled');
+  }
+};
+var disableFieldsetAttribute = function (param) {
+  for (var i = 0; i < param.length; i++) {
+    param[i].setAttribute('disabled', 'disabled');
   }
 };
 
+var disableEllipse = function (param) {
+  var ellips = param.getElementsByTagName('svg');
+  ellips[0].style.display = 'none';
+}
+
+disableFieldsetAttribute(fieldsets);
 var pinMain = document.querySelector('.map__pin--main');
 pinMain.addEventListener('click', function () {
   var pins = createPinObjects(8);
   pinAppend(pins);
-  assignFieldsetAtrribute(fieldsets);
+  assignFieldsetAttribute(fieldsets);
+  disableEllipse(pinMain);
 });
 
