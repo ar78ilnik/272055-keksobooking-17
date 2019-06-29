@@ -4,6 +4,14 @@ var TYPES = ['palace', 'flat', 'house', 'bungalo'];
 var WIDTH_LOCATION = 1200;
 var HEIGHT_LOCATION = 750;
 
+var pinsTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+var mapPins = document.querySelector('.map__pins');
+var fieldsets = document.querySelectorAll('[name="fieldset"]');
+var pinMain = document.querySelector('.map__pin--main');
+var addres = document.querySelector('#address');
+var form = document.querySelector('.ad-form');
+var mapPoint = document.querySelector('.map');
+
 var getRandomValue = function (values) {
   var index = Math.floor(Math.random() * values.length);
   return values[index];
@@ -12,9 +20,6 @@ var getRandomValue = function (values) {
 var getRandomNumber = function (maxNumber) {
   return Math.floor(Math.random() * maxNumber);
 };
-
-var pinsTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-var mapPins = document.querySelector('.map__pins');
 
 var createPinObjects = function (pinsCount) {
   var Arraypins = [];
@@ -46,30 +51,38 @@ var pinAppend = function (pins) {
   mapPins.appendChild(fragment);
 };
 
-var form = document.querySelector('.ad-form');
-var fieldsets = form.getElementsByTagName('fieldset');
+var formEnable = function () {
+  form.classList.remove('ad-form--disabled');
+};
+
 var assignFieldsetAttribute = function (param) {
   for (var i = 0; i < param.length; i++) {
     param[i].removeAttribute('disabled');
   }
 };
+
 var disableFieldsetAttribute = function (param) {
   for (var i = 0; i < param.length; i++) {
     param[i].setAttribute('disabled', 'disabled');
   }
 };
 
-var disableEllipse = function (param) {
-  var ellips = param.getElementsByTagName('svg');
-  ellips[0].style.display = 'none';
+var addressToInput = function (coords) {
+  addres.value = coords.offsetLeft + ', ' + coords.offsetTop;
 };
 
-disableFieldsetAttribute(fieldsets);
-var pinMain = document.querySelector('.map__pin--main');
+var enableMap = function () {
+  mapPoint.classList.remove('map--faded');
+};
+
 pinMain.addEventListener('click', function () {
+  formEnable();
   var pins = createPinObjects(8);
   pinAppend(pins);
   assignFieldsetAttribute(fieldsets);
-  disableEllipse(pinMain);
+  addressToInput(pinMain);
+  enableMap();
 });
+
+disableFieldsetAttribute(fieldsets);
 
