@@ -62,7 +62,7 @@ var disableFieldsetAttribute = function (param) {
 var disableEllipse = function (param) {
   var ellips = param.getElementsByTagName('svg');
   ellips[0].style.display = 'none';
-}
+};
 
 disableFieldsetAttribute(fieldsets);
 var pinMain = document.querySelector('.map__pin--main');
