@@ -6,6 +6,14 @@ var HEIGHT_LOCATION = 750;
 var timeInInput = document.querySelector('#timein');
 var timeOutInput = document.querySelector('#timeout');
 
+var pinsTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+var mapPins = document.querySelector('.map__pins');
+var fieldsets = document.querySelectorAll('[name="fieldset"]');
+var pinMain = document.querySelector('.map__pin--main');
+var addres = document.querySelector('#address');
+var form = document.querySelector('.ad-form');
+var mapPoint = document.querySelector('.map');
+
 var getRandomValue = function (values) {
   var index = Math.floor(Math.random() * values.length);
   return values[index];
@@ -28,14 +36,6 @@ var createPinObjects = function (pinsCount) {
   return Arraypins;
 };
 
-var pins = createPinObjects(8);
-
-var map = document.querySelector('.map');
-map.classList.remove('map--faded');
-
-var pinsTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-var mapPins = document.querySelector('.map__pins');
-
 var renderPin = function (pinValues) {
   var pinElement = pinsTemplate.cloneNode(true);
   pinElement.style = 'left: ' + pinValues.location.x + 'px; top: ' + pinValues.location.y + 'px;';
@@ -44,14 +44,50 @@ var renderPin = function (pinValues) {
   return pinElement;
 };
 
-var fragment = document.createDocumentFragment();
+var pinAppend = function (pins) {
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < pins.length; i++) {
+    var pin = pins[i];
+    fragment.appendChild(renderPin(pin));
+  }
+  mapPins.appendChild(fragment);
+};
 
-for (var i = 0; i < pins.length; i++) {
-  var pin = pins[i];
-  fragment.appendChild(renderPin(pin));
-}
+var formEnable = function () {
+  form.classList.remove('ad-form--disabled');
+};
 
-mapPins.appendChild(fragment);
+var assignFieldsetAttribute = function (param) {
+  for (var i = 0; i < param.length; i++) {
+    param[i].removeAttribute('disabled');
+  }
+};
+
+var disableFieldsetAttribute = function (param) {
+  for (var i = 0; i < param.length; i++) {
+    param[i].setAttribute('disabled', 'disabled');
+  }
+};
+
+var addressToInput = function (coords) {
+  addres.value = coords.offsetLeft + ', ' + coords.offsetTop;
+};
+
+var enableMap = function () {
+  mapPoint.classList.remove('map--faded');
+};
+
+pinMain.addEventListener('click', function () {
+  formEnable();
+  var pins = createPinObjects(8);
+  pinAppend(pins);
+  assignFieldsetAttribute(fieldsets);
+  addressToInput(pinMain);
+  enableMap();
+});
+
+disableFieldsetAttribute(fieldsets);
+
 
 timeInInput.addEventListener('change', function (evt) {
   timeOutInput.value = evt.target.value;
