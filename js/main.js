@@ -85,6 +85,12 @@ var enableMap = function () {
   mapPoint.classList.remove('map--faded');
 };
 
+
+var syncPriceandType = function (evt) {
+  priceInput.min = quartersAndPriceObj[evt.target.value];
+  priceInput.placeholder = quartersAndPriceObj[evt.target.value];
+};
+
 pinMain.addEventListener('click', function () {
   formEnable();
   var pins = createPinObjects(8);
@@ -105,10 +111,4 @@ timeOutInput.addEventListener('change', function (evt) {
   timeInInput.value = evt.target.value;
 });
 
-var syncPriceOfQuarter = function (evt) {
-  priceInput.min.value = quartersAndPriceObj[evt.target.value];
-};
-
-typeQuarters.addEventListener('change', function () {
-  syncPriceOfQuarter();
-});
+typeQuarters.addEventListener('change', syncPriceandType);
