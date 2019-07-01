@@ -15,6 +15,12 @@ var form = document.querySelector('.ad-form');
 var mapPoint = document.querySelector('.map');
 var typeQuarters = document.querySelector('#type');
 var priceInput = document.querySelector('#price');
+var quartersAndPriceObj = {
+  'bungalo': 0,
+  'flat': 1000,
+  'house': 5000,
+  'palace': 10000
+};
 
 var getRandomValue = function (values) {
   var index = Math.floor(Math.random() * values.length);
@@ -99,19 +105,10 @@ timeOutInput.addEventListener('change', function (evt) {
   timeInInput.value = evt.target.value;
 });
 
-typeQuarters.addEventListener('change', function (evt) {
-  if (evt.target.value === 'bungalo') {
-    priceInput.min = 0;
-    priceInput.placeholder = '0';
-  } else if (evt.target.value === 'flat') {
-    priceInput.min = 1000;
-    priceInput.placeholder = '1000';
-  } else if (evt.target.value === 'house') {
-    priceInput.min = 5000;
-    priceInput.placeholder = '5000';
-  } else if (evt.target.value === 'palace') {
-    priceInput.min = 10000;
-    priceInput.placeholder = '10000';
-  }
-});
+var syncPriceOfQuarter = function (evt) {
+  priceInput.min.value = quartersAndPriceObj[evt.target.value];
+};
 
+typeQuarters.addEventListener('change', function () {
+  syncPriceOfQuarter();
+});
