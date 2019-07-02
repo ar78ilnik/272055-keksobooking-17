@@ -3,6 +3,14 @@
 var TYPES = ['palace', 'flat', 'house', 'bungalo'];
 var WIDTH_LOCATION = 1200;
 var HEIGHT_LOCATION = 750;
+var QUARTERS_AND_PRICE = {
+  bungalo: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 10000
+};
+var timeInInput = document.querySelector('#timein');
+var timeOutInput = document.querySelector('#timeout');
 
 var pinsTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var mapPins = document.querySelector('.map__pins');
@@ -11,6 +19,8 @@ var pinMain = document.querySelector('.map__pin--main');
 var addres = document.querySelector('#address');
 var form = document.querySelector('.ad-form');
 var mapPoint = document.querySelector('.map');
+var typeQuarters = document.querySelector('#type');
+var priceInput = document.querySelector('#price');
 
 var getRandomValue = function (values) {
   var index = Math.floor(Math.random() * values.length);
@@ -75,6 +85,12 @@ var enableMap = function () {
   mapPoint.classList.remove('map--faded');
 };
 
+var syncPriceAndType = function (evt) {
+  var onSelectValue = QUARTERS_AND_PRICE[evt.target.value];
+  priceInput.min = onSelectValue;
+  priceInput.placeholder = onSelectValue;
+};
+
 pinMain.addEventListener('click', function () {
   formEnable();
   var pins = createPinObjects(8);
@@ -86,3 +102,13 @@ pinMain.addEventListener('click', function () {
 
 disableFieldsetAttribute(fieldsets);
 
+
+timeInInput.addEventListener('change', function (evt) {
+  timeOutInput.value = evt.target.value;
+});
+
+timeOutInput.addEventListener('change', function (evt) {
+  timeInInput.value = evt.target.value;
+});
+
+typeQuarters.addEventListener('change', syncPriceAndType);
