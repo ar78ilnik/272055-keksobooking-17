@@ -3,6 +3,12 @@
 var TYPES = ['palace', 'flat', 'house', 'bungalo'];
 var WIDTH_LOCATION = 1200;
 var HEIGHT_LOCATION = 750;
+var QUARTERS_AND_PRICE = {
+  bungalo: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 10000
+};
 var timeInInput = document.querySelector('#timein');
 var timeOutInput = document.querySelector('#timeout');
 
@@ -15,12 +21,6 @@ var form = document.querySelector('.ad-form');
 var mapPoint = document.querySelector('.map');
 var typeQuarters = document.querySelector('#type');
 var priceInput = document.querySelector('#price');
-var quartersAndPriceObj = {
-  'bungalo': 0,
-  'flat': 1000,
-  'house': 5000,
-  'palace': 10000
-};
 
 var getRandomValue = function (values) {
   var index = Math.floor(Math.random() * values.length);
@@ -85,10 +85,10 @@ var enableMap = function () {
   mapPoint.classList.remove('map--faded');
 };
 
-
-var syncPriceandType = function (evt) {
-  priceInput.min = quartersAndPriceObj[evt.target.value];
-  priceInput.placeholder = quartersAndPriceObj[evt.target.value];
+var syncPriceAndType = function (evt) {
+  var onSelectValue = QUARTERS_AND_PRICE[evt.target.value];
+  priceInput.min = onSelectValue;
+  priceInput.placeholder = onSelectValue;
 };
 
 pinMain.addEventListener('click', function () {
@@ -111,4 +111,4 @@ timeOutInput.addEventListener('change', function (evt) {
   timeInInput.value = evt.target.value;
 });
 
-typeQuarters.addEventListener('change', syncPriceandType);
+typeQuarters.addEventListener('change', syncPriceAndType);
