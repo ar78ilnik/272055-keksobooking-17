@@ -102,7 +102,6 @@ pinMain.addEventListener('click', function () {
 
 disableFieldsetAttribute(fieldsets);
 
-
 timeInInput.addEventListener('change', function (evt) {
   timeOutInput.value = evt.target.value;
 });
