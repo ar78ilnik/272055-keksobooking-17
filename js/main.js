@@ -22,6 +22,10 @@ var mapPoint = document.querySelector('.map');
 var typeQuarters = document.querySelector('#type');
 var priceInput = document.querySelector('#price');
 
+window.pinMain = pinMain;
+window.form = form;
+window.fieldsets = fieldsets;
+
 var getRandomValue = function (values) {
   var index = Math.floor(Math.random() * values.length);
   return values[index];
@@ -43,7 +47,7 @@ var createPinObjects = function (pinsCount) {
   }
   return Arraypins;
 };
-
+window.createPinObjects = createPinObjects;
 var renderPin = function (pinValues) {
   var pinElement = pinsTemplate.cloneNode(true);
   pinElement.style = 'left: ' + pinValues.location.x + 'px; top: ' + pinValues.location.y + 'px;';
@@ -60,29 +64,17 @@ var pinAppend = function (pins) {
   }
   mapPins.appendChild(fragment);
 };
-
-var formEnable = function () {
-  form.classList.remove('ad-form--disabled');
-};
-
+window.pinAppend = pinAppend;
 var assignFieldsetAttribute = function (param) {
   for (var i = 0; i < param.length; i++) {
     param[i].removeAttribute('disabled');
   }
 };
-
+window.assignFieldsetAttribute = assignFieldsetAttribute;
 var disableFieldsetAttribute = function (param) {
   for (var i = 0; i < param.length; i++) {
     param[i].setAttribute('disabled', 'disabled');
   }
-};
-
-var addressToInput = function (coords) {
-  addres.value = coords.offsetLeft + ', ' + coords.offsetTop;
-};
-
-var enableMap = function () {
-  mapPoint.classList.remove('map--faded');
 };
 
 var syncPriceAndType = function (evt) {
@@ -91,14 +83,14 @@ var syncPriceAndType = function (evt) {
   priceInput.placeholder = onSelectValue;
 };
 
-pinMain.addEventListener('click', function () {
+/* pinMain.addEventListener('click', function () {
   formEnable();
   var pins = createPinObjects(8);
   pinAppend(pins);
   assignFieldsetAttribute(fieldsets);
   addressToInput(pinMain);
   enableMap();
-});
+}); */
 
 disableFieldsetAttribute(fieldsets);
 
