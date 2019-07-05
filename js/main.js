@@ -25,6 +25,7 @@ var priceInput = document.querySelector('#price');
 window.pinMain = pinMain;
 window.form = form;
 window.fieldsets = fieldsets;
+window.addres = addres;
 
 var getRandomValue = function (values) {
   var index = Math.floor(Math.random() * values.length);
@@ -65,11 +66,13 @@ var pinAppend = function (pins) {
   mapPins.appendChild(fragment);
 };
 window.pinAppend = pinAppend;
+
 var assignFieldsetAttribute = function (param) {
   for (var i = 0; i < param.length; i++) {
     param[i].removeAttribute('disabled');
   }
 };
+
 window.assignFieldsetAttribute = assignFieldsetAttribute;
 var disableFieldsetAttribute = function (param) {
   for (var i = 0; i < param.length; i++) {
@@ -89,7 +92,7 @@ var syncPriceAndType = function (evt) {
   pinAppend(pins);
   assignFieldsetAttribute(fieldsets);
   addressToInput(pinMain);
-  enableMap();
+
 }); */
 
 disableFieldsetAttribute(fieldsets);
