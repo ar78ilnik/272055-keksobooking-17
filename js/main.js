@@ -26,6 +26,7 @@ window.pinMain = pinMain;
 window.form = form;
 window.fieldsets = fieldsets;
 window.addres = addres;
+window.mapPoint = mapPoint;
 
 var getRandomValue = function (values) {
   var index = Math.floor(Math.random() * values.length);
