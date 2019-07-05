@@ -1,23 +1,23 @@
 'use strict';
 (function () {
   var formEnable = function () {
-    form.classList.remove('ad-form--disabled');
+    window.form.classList.remove('ad-form--disabled');
   };
 
   var enableMap = function () {
-    mapPoint.classList.remove('map--faded');
+    window.mapPoint.classList.remove('map--faded');
   };
 
   var addressToInput = function (coords) {
-    addres.value = coords.offsetLeft + ', ' + coords.offsetTop;
+    window.addres.value = coords.offsetLeft + ', ' + coords.offsetTop;
   };
   var limits = {
-    top: mapPoint.offsetTop,
-    right: mapPoint.offsetWidth + mapPoint.offsetLeft - pinMain.offsetWidth,
-    bottom: mapPoint.offsetHeight + mapPoint.offsetTop - pinMain.offsetHeight,
-    left: mapPoint.offsetLeft
+    top: window.mapPoint.offsetTop,
+    right: window.mapPoint.offsetWidth + window.mapPoint.offsetLeft - window.pinMain.offsetWidth,
+    bottom: window.mapPoint.offsetHeight + window.mapPoint.offsetTop - window.pinMain.offsetHeight,
+    left: window.mapPoint.offsetLeft
   };
-  pinMain.addEventListener('mousedown', function (evt) {
+  window.pinMain.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
     var startCoords = {
       x: evt.clientX,
@@ -42,8 +42,8 @@
       } else if (moveEvt.pageX > limits.left) {
         getBorderLimits.x = moveEvt.pageX;
       }
-      pinMain.style.left = (pinMain.offsetLeft - shift.x) + 'px';
-      pinMain.style.top = (pinMain.offsetTop - shift.y) + 'px';
+      window.pinMain.style.left = (window.pinMain.offsetLeft - shift.x) + 'px';
+      window.pinMain.style.top = (window.pinMain.offsetTop - shift.y) + 'px';
       formEnable();
       enableMap();
     };
@@ -51,9 +51,9 @@
       upEvt.preventDefault();
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
-      var pins = createPinObjects(8);
-      pinAppend(pins);
-      addressToInput(pinMain);
+      var pins = window.createPinObjects(8);
+      window.pinAppend(pins);
+      addressToInput(window.pinMain);
     };
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
