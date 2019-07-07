@@ -18,7 +18,7 @@ var fieldsets = document.querySelectorAll('[name="fieldset"]');
 var pinMain = document.querySelector('.map__pin--main');
 var addres = document.querySelector('#address');
 var form = document.querySelector('.ad-form');
-var mapPoint = document.querySelector('.map');
+var map = document.querySelector('.map');
 var typeQuarters = document.querySelector('#type');
 var priceInput = document.querySelector('#price');
 
@@ -26,7 +26,7 @@ window.pinMain = pinMain;
 window.form = form;
 window.fieldsets = fieldsets;
 window.addres = addres;
-window.mapPoint = mapPoint;
+window.map = map;
 
 var getRandomValue = function (values) {
   var index = Math.floor(Math.random() * values.length);
