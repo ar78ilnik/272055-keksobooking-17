@@ -21,12 +21,13 @@ var form = document.querySelector('.ad-form');
 var map = document.querySelector('.map');
 var typeQuarters = document.querySelector('#type');
 var priceInput = document.querySelector('#price');
-
-window.pinMain = pinMain;
-window.form = form;
-window.fieldsets = fieldsets;
-window.addres = addres;
-window.map = map;
+var inited = false;
+var mapLimits = {
+  xmin: 0,
+  xmax: 1200,
+  ymin: 130,
+  ymax: 630
+};
 
 var getRandomValue = function (values) {
   var index = Math.floor(Math.random() * values.length);
@@ -36,7 +37,15 @@ var getRandomValue = function (values) {
 var getRandomNumber = function (maxNumber) {
   return Math.floor(Math.random() * maxNumber);
 };
-
+var formEnable = function () {
+  form.classList.remove('ad-form--disabled');
+};
+var enableMap = function () {
+  map.classList.remove('map--faded');
+};
+var addressToInput = function (coords) {
+  addres.value = coords.offsetLeft + ', ' + coords.offsetTop;
+};
 var createPinObjects = function (pinsCount) {
   var Arraypins = [];
   for (var i = 0; i < pinsCount; i++) {
@@ -49,7 +58,7 @@ var createPinObjects = function (pinsCount) {
   }
   return Arraypins;
 };
-window.createPinObjects = createPinObjects;
+
 var renderPin = function (pinValues) {
   var pinElement = pinsTemplate.cloneNode(true);
   pinElement.style = 'left: ' + pinValues.location.x + 'px; top: ' + pinValues.location.y + 'px;';
@@ -66,7 +75,6 @@ var pinAppend = function (pins) {
   }
   mapPins.appendChild(fragment);
 };
-window.pinAppend = pinAppend;
 
 var assignFieldsetAttribute = function (param) {
   for (var i = 0; i < param.length; i++) {
@@ -74,7 +82,6 @@ var assignFieldsetAttribute = function (param) {
   }
 };
 
-window.assignFieldsetAttribute = assignFieldsetAttribute;
 var disableFieldsetAttribute = function (param) {
   for (var i = 0; i < param.length; i++) {
     param[i].setAttribute('disabled', 'disabled');
@@ -87,15 +94,6 @@ var syncPriceAndType = function (evt) {
   priceInput.placeholder = onSelectValue;
 };
 
-/* pinMain.addEventListener('click', function () {
-  formEnable();
-  var pins = createPinObjects(8);
-  pinAppend(pins);
-  assignFieldsetAttribute(fieldsets);
-  addressToInput(pinMain);
-
-}); */
-
 disableFieldsetAttribute(fieldsets);
 
 timeInInput.addEventListener('change', function (evt) {
@@ -107,3 +105,54 @@ timeOutInput.addEventListener('change', function (evt) {
 });
 
 typeQuarters.addEventListener('change', syncPriceAndType);
+
+pinMain.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+    var pinMainCoords = {
+      x: pinMain.offsetLeft - shift.x,
+      y: pinMain.offsetTop - shift.y
+    };
+    var mapPinLimits = {
+      top: mapLimits.ymin - pinMain.offsetHeight,
+      right: mapLimits.xmax - pinMain.offsetWidth,
+      bottom: mapLimits.ymax - pinMain.offsetHeight,
+      left: mapLimits.xmin
+    };
+    if (pinMainCoords.x > mapPinLimits.left && mapPinLimits.right < pinMainCoords.x) {
+      pinMain.style.left = mapPinLimits.x + 'px';
+    }
+    if (pinMainCoords.y > mapPinLimits.top && mapPinLimits.bottom > pinMainCoords.y) {
+      pinMain.style.top = mapPinLimits.y + 'px';
+    }
+    formEnable();
+    enableMap();
+  };
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+    if (!inited) {
+      var pins = createPinObjects(8);
+      pinAppend(pins);
+      assignFieldsetAttribute(fieldsets);
+      addressToInput(pinMain);
+    }
+    inited = true;
+  };
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+});
