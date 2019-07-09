@@ -24,11 +24,10 @@ var priceInput = document.querySelector('#price');
 var inited = false;
 var mapLimits = {
   top: map.offsetTop,
-  right: map.offsetWidth + map.offsetLeft - pinMain.offsetWidth,
-  bottom: map.offsetHeight + map.offsetTop - pinMain.offsetHeight,
+  right: map.offsetWidth - pinMain.offsetWidth,
+  bottom: map.offsetHeight - pinMain.offsetHeight,
   left: map.offsetLeft
 };
-
 var getRandomValue = function (values) {
   var index = Math.floor(Math.random() * values.length);
   return values[index];
@@ -108,29 +107,36 @@ typeQuarters.addEventListener('change', syncPriceAndType);
 
 pinMain.addEventListener('mousedown', function (evt) {
   evt.preventDefault();
-
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
   var onMouseMove = function (moveEvt) {
-    var newLocation = {
-      x: mapLimits.left + pinMain.offsetWidth / 2,
-      y: mapLimits.top + 80
+    moveEvt.preventDefault();
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
     };
-
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
     if (moveEvt.pageX > mapLimits.right) {
-      newLocation.x = mapLimits.right;
-    } else if (moveEvt.pageX > mapLimits.left) {
-      newLocation.x = moveEvt.pageX;
+      pinMain.style.left = mapLimits.right;
+    } else if (moveEvt.pageX < mapLimits.left) {
+      pinMain.style.left = moveEvt.pageX;
     }
     if (moveEvt.pageY > mapLimits.bottom) {
-      newLocation.y = mapLimits.bottom;
-    } else if (moveEvt.pageY > mapLimits.top) {
-      newLocation.y = moveEvt.pageY;
+      pinMain.style.bottom = mapLimits.bottom;
+    } else if (moveEvt.pageY < mapLimits.top) {
+      pinMain.style.top = moveEvt.pageY;
     }
-    pinMain.style.top = newLocation.y + 'px';
-    pinMain.style.left = newLocation.x + 'px';
+
+    pinMain.style.left = (pinMain.offsetLeft - shift.x) + 'px';
+    pinMain.style.top = (pinMain.offsetTop - shift.y) + 'px';
     formEnable();
     enableMap();
   };
-
   var onMouseUp = function (upEvt) {
     upEvt.preventDefault();
     document.removeEventListener('mousemove', onMouseMove);
