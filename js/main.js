@@ -23,10 +23,10 @@ var typeQuarters = document.querySelector('#type');
 var priceInput = document.querySelector('#price');
 var inited = false;
 var mapLimits = {
-  xmin: 0,
-  xmax: 1200,
-  ymin: 130,
-  ymax: 630
+  top: map.offsetTop,
+  right: map.offsetWidth + map.offsetLeft - pinMain.offsetWidth,
+  bottom: map.offsetHeight + map.offsetTop - pinMain.offsetHeight,
+  left: map.offsetLeft
 };
 
 var getRandomValue = function (values) {
@@ -108,39 +108,29 @@ typeQuarters.addEventListener('change', syncPriceAndType);
 
 pinMain.addEventListener('mousedown', function (evt) {
   evt.preventDefault();
-  var startCoords = {
-    x: evt.clientX,
-    y: evt.clientY
-  };
+
   var onMouseMove = function (moveEvt) {
-    moveEvt.preventDefault();
-    var shift = {
-      x: startCoords.x - moveEvt.clientX,
-      y: startCoords.y - moveEvt.clientY
+    var newLocation = {
+      x: mapLimits.left + pinMain.offsetWidth / 2,
+      y: mapLimits.top + 80
     };
-    startCoords = {
-      x: moveEvt.clientX,
-      y: moveEvt.clientY
-    };
-    var pinMainCoords = {
-      x: pinMain.offsetLeft - shift.x,
-      y: pinMain.offsetTop - shift.y
-    };
-    var mapPinLimits = {
-      top: mapLimits.ymin - pinMain.offsetHeight,
-      right: mapLimits.xmax - pinMain.offsetWidth,
-      bottom: mapLimits.ymax - pinMain.offsetHeight,
-      left: mapLimits.xmin
-    };
-    if (pinMainCoords.x > mapPinLimits.left && mapPinLimits.right < pinMainCoords.x) {
-      pinMain.style.left = mapPinLimits.x + 'px';
+
+    if (moveEvt.pageX > mapLimits.right) {
+      newLocation.x = mapLimits.right;
+    } else if (moveEvt.pageX > mapLimits.left) {
+      newLocation.x = moveEvt.pageX;
     }
-    if (pinMainCoords.y > mapPinLimits.top && mapPinLimits.bottom > pinMainCoords.y) {
-      pinMain.style.top = mapPinLimits.y + 'px';
+    if (moveEvt.pageY > mapLimits.bottom) {
+      newLocation.y = mapLimits.bottom;
+    } else if (moveEvt.pageY > mapLimits.top) {
+      newLocation.y = moveEvt.pageY;
     }
+    pinMain.style.top = newLocation.y + 'px';
+    pinMain.style.left = newLocation.x + 'px';
     formEnable();
     enableMap();
   };
+
   var onMouseUp = function (upEvt) {
     upEvt.preventDefault();
     document.removeEventListener('mousemove', onMouseMove);
