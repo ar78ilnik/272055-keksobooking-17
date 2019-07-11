@@ -28,14 +28,7 @@ var mapLimits = {
   ymax: 630,
   xmax: 1200
 };
-var getRandomValue = function (values) {
-  var index = Math.floor(Math.random() * values.length);
-  return values[index];
-};
 
-var getRandomNumber = function (maxNumber) {
-  return Math.floor(Math.random() * maxNumber);
-};
 var formEnable = function () {
   form.classList.remove('ad-form--disabled');
 };
@@ -53,18 +46,17 @@ var createPinObjects = function (pinsCount) {
         avatar: 'img/avatars/user0' + (i + 1) + '.png'
       },
       offer: {
-        type: getRandomValue(TYPES)
+        type: window.utils.getRandomValue(TYPES)
       },
       location: {
-        x: (getRandomNumber(WIDTH_LOCATION) + 25),
-        y: getRandomNumber(HEIGHT_LOCATION)
+        x: (window.utils.getRandomNumber(WIDTH_LOCATION) + 25),
+        y: window.utils.getRandomNumber(HEIGHT_LOCATION)
       }
     };
     Arraypins.push(pin);
   }
   return Arraypins;
 };
-
 var renderPin = function (pinValues) {
   var pinElement = pinsTemplate.cloneNode(true);
   pinElement.style = 'left: ' + pinValues.location.x + 'px; top: ' + pinValues.location.y + 'px;';
@@ -72,7 +64,6 @@ var renderPin = function (pinValues) {
   pinElement.firstChild.alt = pinValues.offer.type;
   return pinElement;
 };
-
 var pinAppend = function (pins) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < pins.length; i++) {
@@ -81,13 +72,11 @@ var pinAppend = function (pins) {
   }
   mapPins.appendChild(fragment);
 };
-
 var assignFieldsetAttribute = function (param) {
   for (var i = 0; i < param.length; i++) {
     param[i].removeAttribute('disabled');
   }
 };
-
 var getMapPinMainCoords = function () {
   var mapPinMainPosition = {
     x: pinMain.offsetLeft + Math.floor(pinMain.offsetWidth / 2),
@@ -95,18 +84,15 @@ var getMapPinMainCoords = function () {
   };
   return mapPinMainPosition;
 };
-
 var disableFieldsetAttribute = function (param) {
   for (var i = 0; i < param.length; i++) {
     param[i].setAttribute('disabled', 'disabled');
   }
 };
-
 var pinAddress = function () {
   var addressInputCoords = getMapPinMainCoords();
   addres.value = addressInputCoords.x + ', ' + addressInputCoords.y;
 };
-
 var syncPriceAndType = function (evt) {
   var onSelectValue = QUARTERS_AND_PRICE[evt.target.value];
   priceInput.min = onSelectValue;
@@ -160,20 +146,22 @@ pinMain.addEventListener('mousedown', function (evt) {
     }
 
     pinAddress();
-
     formEnable();
     enableMap();
   };
   var onMouseUp = function (upEvt) {
+
     upEvt.preventDefault();
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
+
     if (!inited) {
       var pins = createPinObjects(8);
       pinAppend(pins);
       assignFieldsetAttribute(fieldsets);
       addressToInput(pinMain);
     }
+
     inited = true;
   };
   document.addEventListener('mousemove', onMouseMove);
