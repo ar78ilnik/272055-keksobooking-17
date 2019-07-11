@@ -18,10 +18,16 @@ var fieldsets = document.querySelectorAll('[name="fieldset"]');
 var pinMain = document.querySelector('.map__pin--main');
 var addres = document.querySelector('#address');
 var form = document.querySelector('.ad-form');
-var mapPoint = document.querySelector('.map');
+var map = document.querySelector('.map');
 var typeQuarters = document.querySelector('#type');
 var priceInput = document.querySelector('#price');
-
+var inited = false;
+var mapLimits = {
+  ymin: 0,
+  xmin: 0,
+  ymax: 630,
+  xmax: 1200
+};
 var getRandomValue = function (values) {
   var index = Math.floor(Math.random() * values.length);
   return values[index];
@@ -30,14 +36,29 @@ var getRandomValue = function (values) {
 var getRandomNumber = function (maxNumber) {
   return Math.floor(Math.random() * maxNumber);
 };
-
+var formEnable = function () {
+  form.classList.remove('ad-form--disabled');
+};
+var enableMap = function () {
+  map.classList.remove('map--faded');
+};
+var addressToInput = function (coords) {
+  addres.value = coords.offsetLeft + ', ' + coords.offsetTop;
+};
 var createPinObjects = function (pinsCount) {
   var Arraypins = [];
   for (var i = 0; i < pinsCount; i++) {
     var pin = {
-      author: {avatar: 'img/avatars/user0' + (i + 1) + '.png'},
-      offer: {type: getRandomValue(TYPES)},
-      location: {x: (getRandomNumber(WIDTH_LOCATION) + 25), y: getRandomNumber(HEIGHT_LOCATION)}
+      author: {
+        avatar: 'img/avatars/user0' + (i + 1) + '.png'
+      },
+      offer: {
+        type: getRandomValue(TYPES)
+      },
+      location: {
+        x: (getRandomNumber(WIDTH_LOCATION) + 25),
+        y: getRandomNumber(HEIGHT_LOCATION)
+      }
     };
     Arraypins.push(pin);
   }
@@ -61,14 +82,18 @@ var pinAppend = function (pins) {
   mapPins.appendChild(fragment);
 };
 
-var formEnable = function () {
-  form.classList.remove('ad-form--disabled');
-};
-
 var assignFieldsetAttribute = function (param) {
   for (var i = 0; i < param.length; i++) {
     param[i].removeAttribute('disabled');
   }
+};
+
+var getMapPinMainCoords = function () {
+  var mapPinMainPosition = {
+    x: pinMain.offsetLeft + Math.floor(pinMain.offsetWidth / 2),
+    y: pinMain.offsetTop + pinMain.offsetHeight
+  };
+  return mapPinMainPosition;
 };
 
 var disableFieldsetAttribute = function (param) {
@@ -77,12 +102,9 @@ var disableFieldsetAttribute = function (param) {
   }
 };
 
-var addressToInput = function (coords) {
-  addres.value = coords.offsetLeft + ', ' + coords.offsetTop;
-};
-
-var enableMap = function () {
-  mapPoint.classList.remove('map--faded');
+var pinAddress = function () {
+  var addressInputCoords = getMapPinMainCoords();
+  addres.value = addressInputCoords.x + ', ' + addressInputCoords.y;
 };
 
 var syncPriceAndType = function (evt) {
@@ -91,17 +113,7 @@ var syncPriceAndType = function (evt) {
   priceInput.placeholder = onSelectValue;
 };
 
-pinMain.addEventListener('click', function () {
-  formEnable();
-  var pins = createPinObjects(8);
-  pinAppend(pins);
-  assignFieldsetAttribute(fieldsets);
-  addressToInput(pinMain);
-  enableMap();
-});
-
 disableFieldsetAttribute(fieldsets);
-
 
 timeInInput.addEventListener('change', function (evt) {
   timeOutInput.value = evt.target.value;
@@ -112,3 +124,58 @@ timeOutInput.addEventListener('change', function (evt) {
 });
 
 typeQuarters.addEventListener('change', syncPriceAndType);
+
+pinMain.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+    var pinPosition = {
+      x: pinMain.offsetLeft - shift.x,
+      y: pinMain.offsetTop - shift.y
+    };
+    var border = {
+      TOP: mapLimits.ymin - pinMain.offsetHeight,
+      BOTTOM: mapLimits.ymax,
+      LEFT: mapLimits.xmin,
+      RIGHT: mapLimits.xmax - pinMain.offsetWidth
+    };
+
+    if (pinPosition.x > border.LEFT && pinPosition.x <= border.RIGHT) {
+      pinMain.style.left = pinPosition.x + 'px';
+    }
+    if (pinPosition.y > border.TOP && pinPosition.y <= border.BOTTOM) {
+      pinMain.style.top = pinPosition.y + 'px';
+    }
+
+    pinAddress();
+
+    formEnable();
+    enableMap();
+  };
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+    if (!inited) {
+      var pins = createPinObjects(8);
+      pinAppend(pins);
+      assignFieldsetAttribute(fieldsets);
+      addressToInput(pinMain);
+    }
+    inited = true;
+  };
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+});
