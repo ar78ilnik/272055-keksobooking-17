@@ -23,10 +23,10 @@ var typeQuarters = document.querySelector('#type');
 var priceInput = document.querySelector('#price');
 var inited = false;
 var mapLimits = {
-  top: map.offsetTop,
-  right: map.offsetWidth - pinMain.offsetWidth,
-  bottom: map.offsetHeight - pinMain.offsetHeight,
-  left: map.offsetLeft
+  ymin: 0,
+  xmin: 0,
+  ymax: 630,
+  xmax: 1200
 };
 var getRandomValue = function (values) {
   var index = Math.floor(Math.random() * values.length);
@@ -49,9 +49,16 @@ var createPinObjects = function (pinsCount) {
   var Arraypins = [];
   for (var i = 0; i < pinsCount; i++) {
     var pin = {
-      author: {avatar: 'img/avatars/user0' + (i + 1) + '.png'},
-      offer: {type: getRandomValue(TYPES)},
-      location: {x: (getRandomNumber(WIDTH_LOCATION) + 25), y: getRandomNumber(HEIGHT_LOCATION)}
+      author: {
+        avatar: 'img/avatars/user0' + (i + 1) + '.png'
+      },
+      offer: {
+        type: getRandomValue(TYPES)
+      },
+      location: {
+        x: (getRandomNumber(WIDTH_LOCATION) + 25),
+        y: getRandomNumber(HEIGHT_LOCATION)
+      }
     };
     Arraypins.push(pin);
   }
@@ -81,10 +88,23 @@ var assignFieldsetAttribute = function (param) {
   }
 };
 
+var getMapPinMainCoords = function () {
+  var mapPinMainPosition = {
+    x: pinMain.offsetLeft + Math.floor(pinMain.offsetWidth / 2),
+    y: pinMain.offsetTop + pinMain.offsetHeight
+  };
+  return mapPinMainPosition;
+};
+
 var disableFieldsetAttribute = function (param) {
   for (var i = 0; i < param.length; i++) {
     param[i].setAttribute('disabled', 'disabled');
   }
+};
+
+var pinAddress = function () {
+  var addressInputCoords = getMapPinMainCoords();
+  addres.value = addressInputCoords.x + ', ' + addressInputCoords.y;
 };
 
 var syncPriceAndType = function (evt) {
@@ -121,19 +141,26 @@ pinMain.addEventListener('mousedown', function (evt) {
       x: moveEvt.clientX,
       y: moveEvt.clientY
     };
-    if (moveEvt.pageX > mapLimits.right) {
-      pinMain.style.left = mapLimits.right;
-    } else if (moveEvt.pageX < mapLimits.left) {
-      pinMain.style.left = moveEvt.pageX;
+    var pinPosition = {
+      x: pinMain.offsetLeft - shift.x,
+      y: pinMain.offsetTop - shift.y
+    };
+    var border = {
+      TOP: mapLimits.ymin - pinMain.offsetHeight,
+      BOTTOM: mapLimits.ymax,
+      LEFT: mapLimits.xmin,
+      RIGHT: mapLimits.xmax - pinMain.offsetWidth
+    };
+
+    if (pinPosition.x > border.LEFT && pinPosition.x <= border.RIGHT) {
+      pinMain.style.left = pinPosition.x + 'px';
     }
-    if (moveEvt.pageY > mapLimits.bottom) {
-      pinMain.style.bottom = mapLimits.bottom;
-    } else if (moveEvt.pageY < mapLimits.top) {
-      pinMain.style.top = moveEvt.pageY;
+    if (pinPosition.y > border.TOP && pinPosition.y <= border.BOTTOM) {
+      pinMain.style.top = pinPosition.y + 'px';
     }
 
-    pinMain.style.left = (pinMain.offsetLeft - shift.x) + 'px';
-    pinMain.style.top = (pinMain.offsetTop - shift.y) + 'px';
+    pinAddress();
+
     formEnable();
     enableMap();
   };
