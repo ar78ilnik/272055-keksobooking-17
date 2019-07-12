@@ -1,13 +1,5 @@
 'use strict';
 
-var timeInInput = document.querySelector('#timein');
-var timeOutInput = document.querySelector('#timeout');
-var fieldsets = document.querySelectorAll('[name="fieldset"]');
-var pinMain = document.querySelector('.map__pin--main');
-var addres = document.querySelector('#address');
-var typeQuarters = document.querySelector('#type');
-var priceInput = document.querySelector('#price');
-var inited = false;
 var QUARTERS_AND_PRICE = {
   bungalo: 0,
   flat: 1000,
@@ -20,6 +12,14 @@ var mapLimits = {
   ymax: 630,
   xmax: 1200
 };
+var timeInInput = document.querySelector('#timein');
+var timeOutInput = document.querySelector('#timeout');
+var fieldsets = document.querySelectorAll('[name="fieldset"]');
+var pinMain = document.querySelector('.map__pin--main');
+var addres = document.querySelector('#address');
+var typeQuarters = document.querySelector('#type');
+var priceInput = document.querySelector('#price');
+var inited = false;
 
 var getMapPinMainCoords = function () {
   var mapPinMainPosition = {
