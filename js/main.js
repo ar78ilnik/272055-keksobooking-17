@@ -1,92 +1,25 @@
 'use strict';
 
-var TYPES = ['palace', 'flat', 'house', 'bungalo'];
-var WIDTH_LOCATION = 1200;
-var HEIGHT_LOCATION = 750;
 var QUARTERS_AND_PRICE = {
   bungalo: 0,
   flat: 1000,
   house: 5000,
   palace: 10000
 };
-var timeInInput = document.querySelector('#timein');
-var timeOutInput = document.querySelector('#timeout');
-
-var pinsTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-var mapPins = document.querySelector('.map__pins');
-var fieldsets = document.querySelectorAll('[name="fieldset"]');
-var pinMain = document.querySelector('.map__pin--main');
-var addres = document.querySelector('#address');
-var form = document.querySelector('.ad-form');
-var map = document.querySelector('.map');
-var typeQuarters = document.querySelector('#type');
-var priceInput = document.querySelector('#price');
-var inited = false;
 var mapLimits = {
   ymin: 0,
   xmin: 0,
   ymax: 630,
   xmax: 1200
 };
-var getRandomValue = function (values) {
-  var index = Math.floor(Math.random() * values.length);
-  return values[index];
-};
-
-var getRandomNumber = function (maxNumber) {
-  return Math.floor(Math.random() * maxNumber);
-};
-var formEnable = function () {
-  form.classList.remove('ad-form--disabled');
-};
-var enableMap = function () {
-  map.classList.remove('map--faded');
-};
-var addressToInput = function (coords) {
-  addres.value = coords.offsetLeft + ', ' + coords.offsetTop;
-};
-var createPinObjects = function (pinsCount) {
-  var Arraypins = [];
-  for (var i = 0; i < pinsCount; i++) {
-    var pin = {
-      author: {
-        avatar: 'img/avatars/user0' + (i + 1) + '.png'
-      },
-      offer: {
-        type: getRandomValue(TYPES)
-      },
-      location: {
-        x: (getRandomNumber(WIDTH_LOCATION) + 25),
-        y: getRandomNumber(HEIGHT_LOCATION)
-      }
-    };
-    Arraypins.push(pin);
-  }
-  return Arraypins;
-};
-
-var renderPin = function (pinValues) {
-  var pinElement = pinsTemplate.cloneNode(true);
-  pinElement.style = 'left: ' + pinValues.location.x + 'px; top: ' + pinValues.location.y + 'px;';
-  pinElement.firstChild.src = pinValues.author.avatar;
-  pinElement.firstChild.alt = pinValues.offer.type;
-  return pinElement;
-};
-
-var pinAppend = function (pins) {
-  var fragment = document.createDocumentFragment();
-  for (var i = 0; i < pins.length; i++) {
-    var pin = pins[i];
-    fragment.appendChild(renderPin(pin));
-  }
-  mapPins.appendChild(fragment);
-};
-
-var assignFieldsetAttribute = function (param) {
-  for (var i = 0; i < param.length; i++) {
-    param[i].removeAttribute('disabled');
-  }
-};
+var timeInInput = document.querySelector('#timein');
+var timeOutInput = document.querySelector('#timeout');
+var fieldsets = document.querySelectorAll('[name="fieldset"]');
+var pinMain = document.querySelector('.map__pin--main');
+var addres = document.querySelector('#address');
+var typeQuarters = document.querySelector('#type');
+var priceInput = document.querySelector('#price');
+var inited = false;
 
 var getMapPinMainCoords = function () {
   var mapPinMainPosition = {
@@ -95,22 +28,17 @@ var getMapPinMainCoords = function () {
   };
   return mapPinMainPosition;
 };
-
 var disableFieldsetAttribute = function (param) {
   for (var i = 0; i < param.length; i++) {
     param[i].setAttribute('disabled', 'disabled');
   }
 };
-
+var addressToInput = function (coords) {
+  addres.value = coords.offsetLeft + ', ' + coords.offsetTop;
+};
 var pinAddress = function () {
   var addressInputCoords = getMapPinMainCoords();
   addres.value = addressInputCoords.x + ', ' + addressInputCoords.y;
-};
-
-var syncPriceAndType = function (evt) {
-  var onSelectValue = QUARTERS_AND_PRICE[evt.target.value];
-  priceInput.min = onSelectValue;
-  priceInput.placeholder = onSelectValue;
 };
 
 disableFieldsetAttribute(fieldsets);
@@ -122,6 +50,12 @@ timeInInput.addEventListener('change', function (evt) {
 timeOutInput.addEventListener('change', function (evt) {
   timeInInput.value = evt.target.value;
 });
+
+var syncPriceAndType = function (evt) {
+  var onSelectValue = QUARTERS_AND_PRICE[evt.target.value];
+  priceInput.min = onSelectValue;
+  priceInput.placeholder = onSelectValue;
+};
 
 typeQuarters.addEventListener('change', syncPriceAndType);
 
@@ -160,20 +94,22 @@ pinMain.addEventListener('mousedown', function (evt) {
     }
 
     pinAddress();
-
-    formEnable();
-    enableMap();
+    window.form.formEnable();
+    window.map.enableMap();
   };
   var onMouseUp = function (upEvt) {
+
     upEvt.preventDefault();
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
+
     if (!inited) {
-      var pins = createPinObjects(8);
-      pinAppend(pins);
-      assignFieldsetAttribute(fieldsets);
+      var pins = window.pins.createPinObjects(8);
+      window.pins.pinAppend(pins);
+      window.form.assignFieldsetAttribute(fieldsets);
       addressToInput(pinMain);
     }
+
     inited = true;
   };
   document.addEventListener('mousemove', onMouseMove);
