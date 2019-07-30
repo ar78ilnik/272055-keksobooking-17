@@ -104,12 +104,19 @@ pinMain.addEventListener('mousedown', function (evt) {
     document.removeEventListener('mouseup', onMouseUp);
 
     if (!inited) {
-      var pins = window.pins.createPinObjects(8);
-      window.pins.pinAppend(pins);
-      window.form.assignFieldsetAttribute(fieldsets);
-      addressToInput(pinMain);
+      // var pins = window.pins.createPinObjects(8);
+      window.load(function (data) {
+        window.pins.pinsAppend(data);
+        window.form.assignFieldsetAttribute(fieldsets);
+        addressToInput(pinMain);
+      }, function () {
+        var main = document.querySelector('.main');
+        var errorMesage = document.querySelector('#error');
+        var fragment = document.createDocumentFragment();
+        fragment.appendChild(errorMesage);
+        main.appendChild(fragment);
+      });
     }
-
     inited = true;
   };
   document.addEventListener('mousemove', onMouseMove);

@@ -34,7 +34,7 @@
       pinElement.firstChild.alt = pinValues.offer.type;
       return pinElement;
     },
-    pinAppend: function (pins) {
+    pinsAppend: function (pins) {
       var mapPins = document.querySelector('.map__pins');
       var fragment = document.createDocumentFragment();
       for (var i = 0; i < pins.length; i++) {
