@@ -110,7 +110,7 @@ pinMain.addEventListener('mousedown', function (evt) {
         window.form.assignFieldsetAttribute(fieldsets);
         addressToInput(pinMain);
       }, function () {
-        var main = document.querySelector('.main');
+        var main = document.getElementsByTagName('main');
         var errorMesage = document.querySelector('#error');
         var fragment = document.createDocumentFragment();
         fragment.appendChild(errorMesage);
